@@ -1,0 +1,18 @@
+server:
+  port: 8080
+
+mybatis:
+  type-aliases-package: com.hepangda.keshe.model
+
+spring:
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://sql.hepangda.com:10043/ttms?serverTimezone=UTC&useUnicode=true&characterEncoding=utf-8&useSSL=true
+    username: ttms
+    password: ttms123456
+    dbcp2:
+      min-idle: 5
+      initial-size: 5
+      max-total: 5
+      max-wait-millis: 200
