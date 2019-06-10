@@ -15,6 +15,7 @@ public class CodeUtils {
     } catch (BizException ex) {
       return (ResponseDTO<T>) ResponseDTO.fail(failCode, ex.getBizMessage());
     } catch (Exception ex) {
+      ex.printStackTrace();
       return (ResponseDTO<T>) ResponseDTO.fail(BizStatusCode.Unexcepted, "");
     }
   }

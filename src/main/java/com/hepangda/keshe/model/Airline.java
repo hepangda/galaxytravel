@@ -5,17 +5,15 @@ import lombok.experimental.Accessors;
 
 @Data(staticConstructor = "of")
 @Accessors(chain = true)
-public class User {
+public class Airline {
 
   private Long id;
 
-  private String username;
+  private String name;
 
-  private String pwd;
+  private Long sourcePortId;
+
+  private Long destPortId;
 
   private Integer type;
-
-  private String realname;
-
-  private String phone;
 }

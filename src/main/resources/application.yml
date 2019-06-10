@@ -1,6 +1,10 @@
 server:
   port: 8080
 
+logging:
+  level:
+    com.hepangda.keshe.mapper: debug
+
 mybatis:
   type-aliases-package: com.hepangda.keshe.model
 

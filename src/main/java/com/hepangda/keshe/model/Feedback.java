@@ -5,17 +5,11 @@ import lombok.experimental.Accessors;
 
 @Data(staticConstructor = "of")
 @Accessors(chain = true)
-public class User {
+public class Feedback {
 
   private Long id;
 
-  private String username;
+  private Long orderId;
 
-  private String pwd;
-
-  private Integer type;
-
-  private String realname;
-
-  private String phone;
+  private String message;
 }
