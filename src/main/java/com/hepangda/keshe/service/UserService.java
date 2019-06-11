@@ -36,12 +36,13 @@ public class UserService {
     return mapper.insert(user) ? user : null;
   }
 
-  public List<User> show(int page) {
-    final int offset = Constants.BIZ_PAGE_BY * (page - 1);
-    return mapper.selectLimit(offset, Constants.BIZ_PAGE_BY);
+  public boolean deleteById(long id) {
+    return mapper.deleteById(id);
   }
 
-
+  public boolean update(User user) {
+    return mapper.update(user);
+  }
 
   public User getById(long id) {
     return mapper.selectById(id);
@@ -51,15 +52,8 @@ public class UserService {
     return mapper.selectByUsername(username);
   }
 
-  public boolean create(User user) {
-    return mapper.insert(user);
-  }
-
-  public boolean deleteById(long id) {
-    return mapper.deleteById(id);
-  }
-
-  public boolean update(User user) {
-    return mapper.update(user);
+  public List<User> show(int page) {
+    final int offset = Constants.BIZ_PAGE_BY * (page - 1);
+    return mapper.selectLimit(offset, Constants.BIZ_PAGE_BY);
   }
 }

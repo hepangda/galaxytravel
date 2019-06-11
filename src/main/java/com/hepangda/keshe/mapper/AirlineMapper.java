@@ -1,6 +1,7 @@
 package com.hepangda.keshe.mapper;
 
 import com.hepangda.keshe.model.Airline;
+import java.util.List;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Select;
@@ -12,6 +13,9 @@ public interface AirlineMapper {
 
   @Select("SELECT * FROM Airline WHERE id=#{id}")
   Airline selectById(long id);
+
+  @Select("SELECT * FROM Airline LIMIT #{offset},#{count}")
+  List<Airline> selectLimit(int offset, int count);
 
   @Delete("DELETE FROM Airline WHERE id=#{id}")
   boolean deleteById(long id);
