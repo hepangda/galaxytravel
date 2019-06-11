@@ -16,8 +16,8 @@ public class IdUtils {
   public long nextId() {
     long thisTimestamp = now();
     if (lastTimestamp == thisTimestamp && lastId >= maxIdInSeconds) {
-      while ((thisTimestamp = now()) != lastTimestamp) {
-        Thread.onSpinWait();
+      while (thisTimestamp == lastTimestamp) {
+        thisTimestamp = now();
       }
       lastId = 0;
     }

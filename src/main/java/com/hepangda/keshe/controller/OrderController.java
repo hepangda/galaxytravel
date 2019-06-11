@@ -2,6 +2,7 @@ package com.hepangda.keshe.controller;
 
 import com.hepangda.keshe.model.Airline;
 import com.hepangda.keshe.model.Airplane;
+import com.hepangda.keshe.model.Flight;
 import com.hepangda.keshe.model.Order;
 import com.hepangda.keshe.model.User;
 import com.hepangda.keshe.service.AirlineService;
@@ -39,7 +40,7 @@ public class OrderController extends GenericController {
 
   @GetMapping("/admin/order/create/{id}")
   public String pathCreate(@PathVariable("id") long id, Model model) {
-    var flight = fsrv.getById(id);
+    Flight flight = fsrv.getById(id);
     model.addAttribute("biz_flight_msg", flight);
     model.addAttribute("biz_airline_msg", asrv.getById(flight.getAirlineId()));
     model.addAttribute("biz_airplane_msg", psrv.getById(flight.getAirplaneId()));
@@ -61,7 +62,7 @@ public class OrderController extends GenericController {
 
   @GetMapping("/user/order/list")
   public String pathUserList(@RequestParam Integer page, HttpSession session, Model model) {
-    var user = (User) session.getAttribute(Constants.SESSION_USER);
+    User user = (User) session.getAttribute(Constants.SESSION_USER);
     int ipage = dealPage(page);
     model.addAttribute(Constants.BIZF_LIST, srv.showUser(user.getId(), ipage));
     return "order_list_user";

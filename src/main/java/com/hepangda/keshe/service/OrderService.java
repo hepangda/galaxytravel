@@ -30,8 +30,8 @@ public class OrderService {
   }
 
   public List<Order> showUser(long userId, int page) {
-    var result = mapper.selectByUserId(userId);
-    var skipCount = (page - 1) * Constants.BIZ_PAGE_BY;
+    List<Order> result = mapper.selectByUserId(userId);
+    int skipCount = (page - 1) * Constants.BIZ_PAGE_BY;
     return result.subList(skipCount, skipCount + Constants.BIZ_PAGE_BY - 1);
   }
 

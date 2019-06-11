@@ -4,6 +4,7 @@ import com.hepangda.keshe.annotation.StatusMessage;
 import com.hepangda.keshe.exception.BizStatusCode;
 import com.hepangda.keshe.exception.FrameworkException;
 import com.hepangda.keshe.exception.FrameworkStatusCode;
+import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -14,15 +15,15 @@ public class StatusCodeConverter {
 
   static {
     try {
-      var statusClass = Class.forName("com.hepangda.keshe.exception.BizStatusCode");
+      Class statusClass = Class.forName("com.hepangda.keshe.exception.BizStatusCode");
 
-      var fields = statusClass.getDeclaredFields();
-      for (var field : fields) {
+      Field[] fields = statusClass.getDeclaredFields();
+      for (Field field : fields) {
         if (field.getName().startsWith("$")) {
           continue;
         }
 
-        var message = Optional.ofNullable(field.getAnnotation(StatusMessage.class))
+        StatusMessage message = Optional.ofNullable(field.getAnnotation(StatusMessage.class))
             .orElseThrow(() -> new FrameworkException(
                 "Field `" + field.getName() + "` don't have StatusMessage annotation"
             ));

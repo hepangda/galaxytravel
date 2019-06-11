@@ -15,7 +15,7 @@ public class UserService {
   private UserMapper mapper;
 
   public User login(User user) {
-    var originUser = Optional.ofNullable(mapper.selectByUsername(user.getUsername()));
+    Optional<User> originUser = Optional.ofNullable(mapper.selectByUsername(user.getUsername()));
 
     if (originUser.map(i -> i.getPwd().equals(user.getPwd())).orElse(false)) {
       return originUser.get();

@@ -10,7 +10,7 @@ public class CodeUtils {
   @SuppressWarnings("unchecked")
   public static <T> ResponseDTO<T> response(BizStatusCode failCode, Supplier<T> supplier) {
     try {
-      var obj = supplier.get();
+      T obj = supplier.get();
       return (ResponseDTO<T>) ResponseDTO.success(obj);
     } catch (BizException ex) {
       return (ResponseDTO<T>) ResponseDTO.fail(failCode, ex.getBizMessage());
