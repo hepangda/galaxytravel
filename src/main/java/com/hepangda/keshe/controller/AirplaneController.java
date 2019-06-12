@@ -4,6 +4,7 @@ import com.hepangda.keshe.model.Airplane;
 import com.hepangda.keshe.service.AirplaneService;
 import com.hepangda.keshe.util.Constants;
 import com.hepangda.keshe.util.GenericController;
+import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -40,7 +41,8 @@ public class AirplaneController extends GenericController {
   }
 
   @PostMapping("/api/airplane/create")
-  public String doCreate(@RequestBody Airplane airplane, Model model) {
+  public String doCreate(@RequestParam Map<String, Object> airplaneMap, Model model) {
+    Airplane airplane = getBeanFromBody(Airplane.class, airplaneMap);
     return resp(model, () -> srv.add(airplane), "airplane_list", "airplane_creat");
   }
 
@@ -50,7 +52,8 @@ public class AirplaneController extends GenericController {
   }
 
   @PostMapping("/api/airplane/modify/{id}")
-  public String doModify(@PathVariable("id") long id, @RequestBody Airplane airplane, Model model) {
+  public String doModify(@PathVariable("id") long id, @RequestParam Map<String, Object> airplaneMap, Model model) {
+    Airplane airplane = getBeanFromBody(Airplane.class, airplaneMap);
     return resp(model, () -> srv.update(airplane), "airplane_list", "airplane_mod");
   }
 }

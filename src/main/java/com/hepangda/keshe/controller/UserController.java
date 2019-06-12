@@ -4,6 +4,7 @@ import com.hepangda.keshe.model.User;
 import com.hepangda.keshe.service.UserService;
 import com.hepangda.keshe.util.Constants;
 import com.hepangda.keshe.util.GenericController;
+import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -11,7 +12,6 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @CrossOrigin
@@ -40,7 +40,8 @@ public class UserController extends GenericController {
   }
 
   @PostMapping("/api/user/create")
-  public String doCreate(@RequestBody User user, Model model) {
+  public String doCreate(@RequestParam Map<String, Object> userMap, Model model) {
+    User user = getBeanFromBody(User.class, userMap);
     return resp(model, () -> srv.add(user), "usr_list", "usr_creat");
   }
 
@@ -50,7 +51,9 @@ public class UserController extends GenericController {
   }
 
   @PostMapping("/api/user/modify/{id}")
-  public String doModify(@PathVariable("id") long id, @RequestBody User user, Model model) {
+  public String doModify(@PathVariable("id") long id, @RequestParam Map<String, Object> userMap,
+      Model model) {
+    User user = getBeanFromBody(User.class, userMap);
     return resp(model, () -> srv.update(user), "usr_list", "usr_mod");
   }
 }

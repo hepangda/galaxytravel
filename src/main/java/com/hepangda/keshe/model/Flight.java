@@ -1,11 +1,10 @@
 package com.hepangda.keshe.model;
 
-import java.sql.Date;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
 @Data(staticConstructor = "of")
-@Accessors(chain = true)
+@Accessors
 public class Flight {
 
   private Long id;

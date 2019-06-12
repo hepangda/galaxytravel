@@ -4,7 +4,7 @@ import lombok.Data;
 import lombok.experimental.Accessors;
 
 @Data(staticConstructor = "of")
-@Accessors(chain = true)
+@Accessors
 public class Airport {
 
   private Long id;

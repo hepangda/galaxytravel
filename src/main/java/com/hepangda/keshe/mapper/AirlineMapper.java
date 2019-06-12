@@ -17,6 +17,9 @@ public interface AirlineMapper {
   @Select("SELECT * FROM Airline LIMIT #{offset},#{count}")
   List<Airline> selectLimit(int offset, int count);
 
+  @Select("SELECT * FROM Airline")
+  List<Airline> selectAll();
+
   @Delete("DELETE FROM Airline WHERE id=#{id}")
   boolean deleteById(long id);
 

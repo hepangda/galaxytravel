@@ -4,6 +4,7 @@ import com.hepangda.keshe.model.Airline;
 import com.hepangda.keshe.service.AirlineService;
 import com.hepangda.keshe.util.Constants;
 import com.hepangda.keshe.util.GenericController;
+import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -11,7 +12,6 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @CrossOrigin
@@ -40,7 +40,8 @@ public class AirlineController extends GenericController {
   }
 
   @PostMapping("/api/airline/create")
-  public String doCreate(@RequestBody Airline airline, Model model) {
+  public String doCreate(@RequestParam Map<String, Object> airlineMap, Model model) {
+    Airline airline = getBeanFromBody(Airline.class, airlineMap);
     return resp(model, () -> srv.add(airline), "airline_list", "airline_creat");
   }
 
@@ -50,7 +51,9 @@ public class AirlineController extends GenericController {
   }
 
   @PostMapping("/api/airline/modify/{id}")
-  public String doModify(@PathVariable("id") long id, @RequestBody Airline airline, Model model) {
+  public String doModify(@PathVariable("id") long id, @RequestParam Map<String, Object> airlineMap,
+      Model model) {
+    Airline airline = getBeanFromBody(Airline.class, airlineMap);
     return resp(model, () -> srv.update(airline), "airline_list", "airline_mod");
   }
 

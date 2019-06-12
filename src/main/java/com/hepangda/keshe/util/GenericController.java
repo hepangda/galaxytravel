@@ -1,26 +1,18 @@
 package com.hepangda.keshe.util;
 
-import com.hepangda.keshe.dto.ResponseDTO;
+import com.fasterxml.jackson.databind.util.BeanUtil;
 import com.hepangda.keshe.exception.BizException;
-import com.hepangda.keshe.exception.BizStatusCode;
+import com.hepangda.keshe.exception.FrameworkException;
+import java.lang.reflect.Constructor;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.function.Supplier;
+import org.apache.commons.beanutils.BeanUtils;
 import org.springframework.ui.Model;
 
 public class GenericController {
 
-  @SuppressWarnings("unchecked")
-  public static <T> ResponseDTO<T> resp(BizStatusCode failCode, Supplier<T> supplier) {
-    try {
-      T obj = supplier.get();
-      return (ResponseDTO<T>) ResponseDTO.success(obj);
-    } catch (BizException ex) {
-      return (ResponseDTO<T>) ResponseDTO.fail(failCode, ex.getBizMessage());
-    } catch (Exception ex) {
-      return (ResponseDTO<T>) ResponseDTO.fail(BizStatusCode.Unexcepted, ex.getMessage());
-    }
-  }
-
-  public <T> String resp(Model model, Supplier<T> supplier, Supplier<String> notNull,
+  protected <T> String resp(Model model, Supplier<T> supplier, Supplier<String> notNull,
       Supplier<String> ifNull) {
     try {
       if (supplier.get() != null) {
@@ -41,7 +33,7 @@ public class GenericController {
     return ifNull.get();
   }
 
-  public <T> String resp(Model model, Supplier<T> supplier, String result) {
+  protected <T> String resp(Model model, Supplier<T> supplier, String result) {
     try {
       if (supplier.get() != null) {
         model.addAttribute(Constants.BIZF_ISOK, Constants.BIZF_ISOK_YES);
@@ -59,7 +51,7 @@ public class GenericController {
     return result;
   }
 
-  public <T> String resp(Model model, Supplier<T> supplier, String success, String failed) {
+  protected <T> String resp(Model model, Supplier<T> supplier, String success, String failed) {
     try {
       if (supplier.get() != null) {
         model.addAttribute(Constants.BIZF_ISOK, Constants.BIZF_ISOK_YES);
@@ -75,7 +67,22 @@ public class GenericController {
     return failed;
   }
 
-  public int dealPage(Integer page) {
+  @SuppressWarnings("unchecked")
+  protected <T> T getBeanFromBody(Class<T> clazz, Map<String, Object> beanMap) {
+    try {
+      T result = (T) clazz.getMethod("of").invoke(null);
+      for (Entry<String, Object> i : beanMap.entrySet()) {
+        System.out.println("Copy: [" + i.getKey() + "] = " + i.getValue());
+        BeanUtils.setProperty(result, i.getKey(), i.getValue());
+      }
+      return result;
+    } catch (Exception ex) {
+      ex.printStackTrace(System.err);
+      throw new FrameworkException("Code fault");
+    }
+  }
+
+  protected int dealPage(Integer page) {
     return (page == null || page < 1) ? 1 : page;
   }
 }

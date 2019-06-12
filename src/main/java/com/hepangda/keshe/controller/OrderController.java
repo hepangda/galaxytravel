@@ -1,7 +1,5 @@
 package com.hepangda.keshe.controller;
 
-import com.hepangda.keshe.model.Airline;
-import com.hepangda.keshe.model.Airplane;
 import com.hepangda.keshe.model.Flight;
 import com.hepangda.keshe.model.Order;
 import com.hepangda.keshe.model.User;
@@ -11,6 +9,7 @@ import com.hepangda.keshe.service.FlightService;
 import com.hepangda.keshe.service.OrderService;
 import com.hepangda.keshe.util.Constants;
 import com.hepangda.keshe.util.GenericController;
+import java.util.Map;
 import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -19,7 +18,6 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @CrossOrigin
@@ -69,7 +67,8 @@ public class OrderController extends GenericController {
   }
 
   @PostMapping("/api/order/create")
-  public String doCreate(@RequestBody Order order, Model model) {
+  public String doCreate(@RequestParam Map<String, Object> orderMap, Model model) {
+    Order order = getBeanFromBody(Order.class, orderMap);
     return resp(model, () -> srv.add(order), "order_list", "order_creat");
   }
 
@@ -79,7 +78,9 @@ public class OrderController extends GenericController {
   }
 
   @PostMapping("/api/order/modify/{id}")
-  public String doModify(@PathVariable("id") long id, @RequestBody Order order, Model model) {
+  public String doModify(@PathVariable("id") long id, @RequestParam Map<String, Object> orderMap,
+      Model model) {
+    Order order = getBeanFromBody(Order.class, orderMap);
     return resp(model, () -> srv.update(order), "order_list", "order_mod");
   }
 }

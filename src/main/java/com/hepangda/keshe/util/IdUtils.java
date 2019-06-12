@@ -13,7 +13,7 @@ public class IdUtils {
 
   private static final long maxIdInSeconds = 65535;
 
-  public long nextId() {
+  public static long nextId() {
     long thisTimestamp = now();
     if (lastTimestamp == thisTimestamp && lastId >= maxIdInSeconds) {
       while (thisTimestamp == lastTimestamp) {

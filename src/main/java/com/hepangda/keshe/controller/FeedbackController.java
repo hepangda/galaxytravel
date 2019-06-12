@@ -4,6 +4,7 @@ import com.hepangda.keshe.model.Feedback;
 import com.hepangda.keshe.service.FeedbackService;
 import com.hepangda.keshe.util.Constants;
 import com.hepangda.keshe.util.GenericController;
+import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -11,7 +12,6 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @CrossOrigin
@@ -42,8 +42,10 @@ public class FeedbackController extends GenericController {
 
 
   @PostMapping("/api/feedback/create")
-  public String doCreate(@RequestBody Feedback feedback, Model model) {
+  public String doCreate(@RequestParam Map<String, Object> feedbackMap, Model model) {
     // TODO: add success router
+
+    Feedback feedback = getBeanFromBody(Feedback.class, feedbackMap);
     return resp(model, () -> srv.add(feedback), "", "feedback_creat");
   }
 
@@ -53,7 +55,9 @@ public class FeedbackController extends GenericController {
   }
 
   @PostMapping("/api/feedback/modify/{id}")
-  public String doModify(@PathVariable("id") long id, @RequestBody Feedback feedback, Model model) {
+  public String doModify(@PathVariable("id") long id, @RequestParam Map<String, Object> feedbackMap,
+      Model model) {
+    Feedback feedback = getBeanFromBody(Feedback.class, feedbackMap);
     return resp(model, () -> srv.update(feedback), "feedback_list", "feedback_mod");
   }
 }

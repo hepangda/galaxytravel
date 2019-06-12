@@ -17,6 +17,9 @@ public interface FlightMapper {
   @Select("SELECT * FROM Flight LIMIT #{offset},#{count}")
   List<Flight> selectLimit(int offset, int count);
 
+  @Select("SELECT * FROM Flight WHERE scheTime >= #{low} AND scheTime <= #{high}")
+  List<Flight> selectTime(long low, long high);
+
   @Delete("DELETE FROM Flight WHERE id=#{id}")
   boolean deleteById(long id);
 
