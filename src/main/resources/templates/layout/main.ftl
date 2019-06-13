@@ -6,6 +6,7 @@
     <link href="https://cdn.bootcss.com/twitter-bootstrap/3.3.7/css/bootstrap.min.css"
           rel="stylesheet">
     <link href="/css/main.css" rel="stylesheet">
+    <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
   </head>
   <body>
   <div class="top-bar">
@@ -64,7 +65,6 @@
   <div class="site-footer">
     <div class="container">&copy; 2019 灰猪旅行</div>
   </div>
-  <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
   <script src="https://cdn.bootcss.com/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
   </body>
   </html>

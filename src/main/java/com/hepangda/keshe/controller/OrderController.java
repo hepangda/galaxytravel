@@ -1,5 +1,7 @@
 package com.hepangda.keshe.controller;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.hepangda.keshe.model.Flight;
 import com.hepangda.keshe.model.Order;
 import com.hepangda.keshe.model.User;
@@ -40,10 +42,9 @@ public class OrderController extends GenericController {
   public String pathCreate(@PathVariable("id") long flightId, Model model) {
     Flight flight = fsrv.getById(flightId);
     model.addAttribute("active", "order");
-
+    model.addAttribute("biz_clazz", clazz);
     model.addAttribute("biz_flight_msg", flight);
-    model.addAttribute("biz_airline_msg", asrv.getById(flight.getAirlineId()));
-    model.addAttribute("biz_airplane_msg", psrv.getById(flight.getAirplaneId()));
+    model.addAttribute("biz_seat", fsrv.getSeat(clazz, flightId));
     return "order_creat";
   }
 
@@ -59,7 +60,8 @@ public class OrderController extends GenericController {
   }
 
   @GetMapping("/user/order/list")
-  public String pathUserList(@RequestParam(required = false) Integer page, HttpSession session, Model model) {
+  public String pathUserList(@RequestParam(required = false) Integer page, HttpSession session,
+      Model model) {
     User user = (User) session.getAttribute(Constants.SESSION_USER);
     int ipage = dealPage(page);
     model.addAttribute(Constants.BIZF_LIST, srv.showUser(user.getId(), ipage));
@@ -76,7 +78,21 @@ public class OrderController extends GenericController {
     Order order = getBeanFromBody(Order.class, orderMap);
     model.addAttribute("active", "order");
 
-    return resp(model, () -> srv.add(order), "order_list", "order_creat");
+    try {
+      JSONArray array = JSONArray.parseArray((String) orderMap.get("tickets"));
+      String[] ticket = array.getString(0).split(",");
+      Integer i = Integer.valueOf(ticket[0]);
+      Integer j = Integer.valueOf(ticket[1]);
+      order.setRow(i);
+      order.setCol(j);
+      System.err.println(JSON.toJSONString(order));
+      return resp(model, () -> srv.add(order), x -> "gotoorder",
+          x -> pathCreate(order.getFlightId(), order.getClazz(), model)
+      );
+    } catch (Exception ex) {
+    }
+
+    return pathCreate(order.getFlightId(), order.getClazz(), model);
   }
 
   @PostMapping("/api/order/delete")

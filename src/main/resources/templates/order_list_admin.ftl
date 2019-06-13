@@ -8,13 +8,6 @@
       left: 50%;
       transform: translateX(-50%) translateY(-50%);
     }
-
-    .searchbutton {
-      margin: 0;
-      padding: 0;
-      border: 1px solid transparent;
-      outline: none;
-    }
   </style>
 
   <div class="col-md-9">

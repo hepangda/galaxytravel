@@ -4,12 +4,15 @@ import com.hepangda.keshe.mapper.AirlineMapper;
 import com.hepangda.keshe.mapper.AirplaneMapper;
 import com.hepangda.keshe.mapper.AirportMapper;
 import com.hepangda.keshe.mapper.FlightMapper;
+import com.hepangda.keshe.mapper.OrderMapper;
 import com.hepangda.keshe.model.Airline;
 import com.hepangda.keshe.model.Airplane;
 import com.hepangda.keshe.model.Airport;
 import com.hepangda.keshe.model.Flight;
+import com.hepangda.keshe.model.Order;
 import com.hepangda.keshe.util.Constants;
 import com.hepangda.keshe.util.IdUtils;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,12 +35,56 @@ public class FlightService {
   @Autowired
   private AirplaneMapper airplaneMapper;
 
+  @Autowired
+  private OrderMapper orderMapper;
+
   public boolean add(Flight flight) {
     if (flight.getScheTime() == null) {
       return false;
     }
     flight.setId(IdUtils.nextId());
     return flightMapper.insert(flight);
+  }
+
+  public List<List<String[]>> getSeat(long clazz, long flightId) {
+    List<List<String[]>> result = new ArrayList<>();
+
+    Flight flight = flightMapper.selectById(flightId);
+    Airplane airplane = airplaneMapper.selectById(flight.getAirplaneId());
+
+    List<Order> orders = orderMapper.selectByFlightId(flightId);
+    if (clazz == 0) {
+      for (int i = 1; i <= airplane.getFirstClassRows(); i++) {
+        List<String[]> inner = new ArrayList<>();
+        for (int j = 1; j <= airplane.getCols(); j++) {
+          final int row = i;
+          final int col = j;
+
+          if (orders.stream().anyMatch(x -> x.getRow() == row && x.getCol() == col)) {
+            inner.add(new String[]{row + "," + col, "seat unavailable"});
+          } else {
+            inner.add(new String[]{row + "," + col, "seat"});
+          }
+        }
+        result.add(inner);
+      }
+    } else {
+      for (int i = airplane.getFirstClassRows() + 1; i <= airplane.getRows(); i++) {
+        List<String[]> inner = new ArrayList<>();
+        for (int j = 1; j <= airplane.getCols(); j++) {
+          final int row = i;
+          final int col = j;
+
+          if (orders.stream().anyMatch(x -> x.getRow() == row && x.getCol() == col)) {
+            inner.add(new String[]{row + "," + col, "seat unavailable"});
+          } else {
+            inner.add(new String[]{row + "," + col, "seat"});
+          }
+        }
+        result.add(inner);
+      }
+    }
+    return result;
   }
 
   public boolean deleteById(long id) {

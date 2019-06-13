@@ -50,8 +50,8 @@
           <td>${flight.firstClassPrice}</td>
           <td>${flight.secondClassPrice}</td>
           <td>
-            <a href="/user/order/create/${flight.id?c}">买头等舱</a>
-            <a href="/user/order/create/${flight.id?c}">买经济舱</a>
+            <a href="/user/order/create/0/${flight.id?c}">买头等舱</a>
+            <a href="/user/order/create/1/${flight.id?c}">买经济舱</a>
           </td>
         </tr>
       </#list>
