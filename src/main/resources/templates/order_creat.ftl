@@ -1,23 +1,62 @@
-购票
+<#import "layout/main.ftl" as layout>
+<@layout.content>
+  <div class="col-md-offset-2 col-md-8">
+    <h1>购票</h1>
+    <hr>
+    <form class="form-horizontal" action="/api/order/create" method="POST"
+          onsubmit="return fillTickets('fieldTickets');">
+      <div class="form-group">
+        <label class="col-sm-2 control-label">航班</label>
+        <div class="col-sm-10">
+          <input type="text" class="form-control" name="name" required readonly
+                 value="${biz_flight_msg.name}">
+        </div>
+      </div>
 
-用户想买的航班信息会放在 biz_flight_msg 这个attribute里面
-航线信息在 biz_airline_msg
-飞机信息在 biz_airplane_msg
-座位信息在 biz_seat_msg 里面
-biz_seat_msg是一个二维boolean数组，表示某个座位是否被卖出（还未实现，你先这么写就好）
+      <div class="form-group">
+        <label class="col-sm-2 control-label">舱位</label>
+        <div class="col-sm-10">
+          <input class="form-control"
+                 value="<#if biz_clazz == 0>头等舱</#if><#if biz_clazz == 1>经济舱</#if>" readonly>
+          <select name="clazz" class="form-control" style="visibility: hidden">
+            <option value="0" <#if biz_clazz == 0>selected</#if>>头等舱</option>
+            <option value="1" <#if biz_clazz == 1>selected</#if>>经济舱</option>
+          </select>
+        </div>
+      </div>
 
-当前登陆用户在session的login_user里面
+      <div class="form-group">
+        <label class="col-sm-2 control-label">价格</label>
+        <div class="col-sm-10">
+          <input type="text" class="form-control" name="cost" required readonly
+                 value="<#if biz_clazz == 0>${biz_flight_msg.firstClassPrice}</#if><#if biz_clazz == 1>${biz_flight_msg.secondClassPrice}</#if>">
+        </div>
+      </div>
 
-最后用JSON POST到/api/order/create，
+      <div>
+        <input type="hidden" name="tickets" id="fieldTickets">
+        <input type="hidden" name="userId" value="${currentUser.id?c}">
+        <input type="hidden" name="flightId" value="${biz_flight_msg.id?c}">
+        <input type="hidden" name="type" value="1">
 
-{
-Long id;        // 订单ID【这一项你填null】
-Long userId;    // 用户ID
-Long flightId;  // 航班ID
-Integer clazz;  // 座位类型 0=头等舱 1=经济舱
-Long cost;      // 花费了多少钱【这一项你填null或者不填，就是当前这个座位的价钱】
-Integer type;   // 状态 0=已取消 1=正常
-Integer row;    // 第几排
-Integer col;    // 第几列
-}
+        <p class="text-center">选座</p>
+        <div class="seats">
+            <#list biz_seat as stmsg>
+              <div class="seats-row">
+                  <#list stmsg as st>
+                    <div class="${st[1]}" data-ticketid="${st[0]}"></div>
+                  </#list>
+              </div>
+            </#list>
+        </div>
 
+        <div class="form-group">
+          <div class="col-sm-offset-2 col-sm-10">
+            <button type="submit" class="btn btn-success">提交订单</button>
+            <a class="btn btn-default" href="/user/flight/list">返回</a>
+          </div>
+        </div>
+    </form>
+  </div>
+  <script src="/js/selectSeat.js"></script>
+</@layout.content>

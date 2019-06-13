@@ -38,8 +38,9 @@ public class OrderController extends GenericController {
   @Autowired
   AirplaneService psrv;
 
-  @GetMapping("/admin/order/create/{id}")
-  public String pathCreate(@PathVariable("id") long flightId, Model model) {
+  @GetMapping("/user/order/create/{clazz}/{id}")
+  public String pathCreate(@PathVariable("id") long flightId,
+      @PathVariable("clazz") long clazz, Model model) {
     Flight flight = fsrv.getById(flightId);
     model.addAttribute("active", "order");
     model.addAttribute("biz_clazz", clazz);
