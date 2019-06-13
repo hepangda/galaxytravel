@@ -19,7 +19,7 @@
           <div class="form-group">
             <label for="username" class="col-sm-3 control-label">用户名</label>
             <div class="col-sm-8">
-              <input type="tel" class="form-control" name="username" id="username" placeholder="手机号"
+              <input type="tel" class="form-control" name="username" id="username" placeholder="用户名"
                      value="${phoneNo!}">
             </div>
           </div>

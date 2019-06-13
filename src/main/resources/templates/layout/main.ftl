@@ -40,9 +40,6 @@
                 <li><a href="/logout">退出</a></li>
               </ul>
             </div>
-          <#else>
-
-            <a class="btn btn-default giant-order-btn" href="/order">立即出发</a>
           </#if>
       </div>
       <img src="/images/flippy-logo.png">
