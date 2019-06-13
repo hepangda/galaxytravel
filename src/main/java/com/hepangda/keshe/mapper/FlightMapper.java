@@ -4,6 +4,7 @@ import com.hepangda.keshe.model.Flight;
 import java.util.List;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 import org.springframework.stereotype.Component;
@@ -15,7 +16,7 @@ public interface FlightMapper {
   Flight selectById(long id);
 
   @Select("SELECT * FROM Flight LIMIT #{offset},#{count}")
-  List<Flight> selectLimit(int offset, int count);
+  List<Flight> selectLimit(@Param("offset") int offset, @Param("count") int count);
 
   @Select("SELECT * FROM Flight WHERE scheTime >= #{low} AND scheTime <= #{high}")
   List<Flight> selectTime(long low, long high);

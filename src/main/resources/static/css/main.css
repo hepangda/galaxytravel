@@ -1,0 +1,95 @@
+body {
+    margin-top: 110px;
+}
+
+.top-bar {
+    border-bottom: solid 1px #e5e5e5;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 25px;
+    font-size: 0.9em;
+    line-height: 25px;
+    z-index: 11000;
+    background-color: #F2F2F2;
+
+}
+
+.site-header {
+    padding: 8px;
+    border-bottom: solid 1px #43C507;
+    box-shadow: 5px 0 5px rgba(128,128,128,.5);
+    position: fixed;
+    top: 25px;
+    left: 0;
+    width: 100%;
+    z-index: 10000;
+    background-color: white;
+}
+
+.site-footer {
+    padding: 15px;
+    margin-top: 20px;
+    border-top: solid 1px #D8D8D8;
+    color: #666;
+    clear: both;
+}
+
+.giant-order-btn {
+    vertical-align: top;
+    margin-right: 20px;
+    margin-top: 10px;
+    border: solid 1px #43C507;
+    color: #43C507 !important;
+    line-height: 30px;
+
+}
+
+.searchbox {
+    display: inline-block;
+    border: solid 2px #43C507;
+    border-radius: 5px 5px 5px 5px;
+    margin-left: 100px;
+}
+
+.mgrhello {
+    display: inline-block;
+    margin-left: 100px;
+}
+
+.searchbox .keyword {
+    border: none;
+    line-height: 30px;
+    margin-left: 15px;
+    margin-right: 10px;
+    margin-top: 4px;
+    vertical-align: top;
+    width: 240px;
+    outline: none;
+}
+.searchbox .submitbtn {
+    height: 40px;
+    background-color: #43C507;
+    padding: 10px;
+    border: none;
+    border-radius: 0 3px 3px 0;
+    background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAAoCAMAAAC7IEhfAAAAQlBMVEUAAAD///////////////////////////////////////////////////////////////////////////////////8IX9KGAAAAFXRSTlMA+Y/XljcvKwbekR/z5MoeDAq7vWFffapXAAAAlElEQVQ4y+3S3QrDIAwFYBNNf6y1uu28/6sOcdDdaITdrNBzpfCBSYy5c5HMbIkszwpbHD5xueseIC8piSc8lw502Kd6mna4Tn1ExVVJ1K6T4c+LBzehhZwXgW1CwvLVGGgMJoSfntab0cejD1z5QpachQlAPIaWAsB6KGsWyprFKvVsa5HbqIxmUAYzJGN4mTv/nje3wQeTZXOUBwAAAABJRU5ErkJggg==);
+    background-repeat: no-repeat;
+    background-position: left;
+    padding-left: 45px;
+    color:white;
+    font-size: 15px;
+}
+
+.login-box {
+    margin-top: 50px;
+    margin-bottom: 50px;
+    padding: 15px;
+    border: solid 1px #e0e0e0;
+    box-shadow: 5px 5px 5px rgba(128,128,128,.3);
+}
+
+.sidebar {
+    margin-top: 15px;
+}

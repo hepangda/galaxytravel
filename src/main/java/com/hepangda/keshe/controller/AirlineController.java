@@ -22,39 +22,62 @@ public class AirlineController extends GenericController {
   AirlineService srv;
 
   @GetMapping("/admin/airline/create")
-  public String pathCreate() {
+  public String pathCreate(Model model) {
+    model.addAttribute("active", "airline");
+    model.addAttribute("biz_airport_map", srv.getPortMap());
     return "airline_creat";
   }
 
   @GetMapping("/admin/airline/modify/{id}")
   public String pathModify(@PathVariable("id") long id, Model model) {
     model.addAttribute(Constants.BIZF_MODIFIER, srv.getById(id));
+    model.addAttribute("active", "airline");
+    model.addAttribute("biz_airport_map", srv.getPortMap());
     return "airline_mod";
   }
 
   @GetMapping("/admin/airline/list")
-  public String pathList(@RequestParam Integer page, Model model) {
+  public String pathList(@RequestParam(required = false) Integer page,
+      @RequestParam(required = false) String keyword, Model model) {
     int ipage = dealPage(page);
-    model.addAttribute(Constants.BIZF_LIST, srv.show(ipage));
+    model.addAttribute("active", "airline");
+    model.addAttribute("page_max", srv.getPageMax());
+    model.addAttribute("biz_airport_map", srv.getPortMap());
+    model.addAttribute(Constants.BIZF_LIST, srv.show(ipage, keyword));
+    if (keyword != null && !keyword.isEmpty()) {
+      model.addAttribute("not_query", "yes");
+    }
     return "airline_list";
   }
 
   @PostMapping("/api/airline/create")
   public String doCreate(@RequestParam Map<String, Object> airlineMap, Model model) {
     Airline airline = getBeanFromBody(Airline.class, airlineMap);
-    return resp(model, () -> srv.add(airline), "airline_list", "airline_creat");
+    return resp(model, () -> srv.add(airline), i -> pathList(1, null, model), i -> {
+      model.addAttribute(Constants.GBF_BIZMSG, "创建失败");
+      model.addAttribute("active", "airline");
+      model.addAttribute("biz_airport_map", srv.getPortMap());
+      return "airline_creat";
+    });
   }
 
-  @PostMapping("/api/airline/delete/{id}")
-  public String doDelete(@PathVariable("id") long id, Model model) {
-    return resp(model, () -> srv.deleteById(id), "airline_list");
+  @PostMapping("/api/airline/delete")
+  public String doDelete(@RequestParam long id, Model model) {
+    model.addAttribute("active", "airline");
+    return resp(model, () -> srv.deleteById(id), () -> pathList(1, null, model));
   }
 
   @PostMapping("/api/airline/modify/{id}")
   public String doModify(@PathVariable("id") long id, @RequestParam Map<String, Object> airlineMap,
       Model model) {
     Airline airline = getBeanFromBody(Airline.class, airlineMap);
-    return resp(model, () -> srv.update(airline), "airline_list", "airline_mod");
+    model.addAttribute("active", "airline");
+    return resp(model, () -> srv.update(airline), i -> pathList(1, null, model), i -> {
+      model.addAttribute("active", "airline");
+      model.addAttribute(Constants.GBF_BIZMSG, "修改失败");
+      model.addAttribute("biz_airport_map", srv.getPortMap());
+      return "airline_mod";
+    });
   }
 
 }

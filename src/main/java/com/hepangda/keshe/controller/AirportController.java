@@ -22,38 +22,55 @@ public class AirportController extends GenericController {
   AirportService srv;
 
   @GetMapping("/admin/airport/create")
-  public String pathCreate() {
+  public String pathCreate(Model model) {
+    model.addAttribute("active", "airport");
     return "airport_creat";
   }
 
   @GetMapping("/admin/airport/modify/{id}")
   public String pathModify(@PathVariable("id") long id, Model model) {
     model.addAttribute(Constants.BIZF_MODIFIER, srv.getById(id));
+    model.addAttribute("active", "airport");
     return "airport_mod";
   }
 
   @GetMapping("/admin/airport/list")
-  public String pathList(@RequestParam Integer page, Model model) {
+  public String pathList(@RequestParam(required = false) Integer page,
+      @RequestParam(required = false) String keyword, Model model) {
     int ipage = dealPage(page);
-    model.addAttribute(Constants.BIZF_LIST, srv.show(ipage));
+    model.addAttribute(Constants.BIZF_LIST, srv.show(ipage, keyword));
+    model.addAttribute("active", "airport");
+    model.addAttribute("page_max", srv.getPageMax());
+    if (keyword != null && !keyword.isEmpty()) {
+      model.addAttribute("not_query", "yes");
+    }
     return "airport_list";
   }
 
   @PostMapping("/api/airport/create")
   public String doCreate(@RequestParam Map<String, Object> airportMap, Model model) {
     Airport airport = getBeanFromBody(Airport.class, airportMap);
-    return resp(model, () -> srv.add(airport), "airport_list", "airport_creat");
+    return resp(model, () -> srv.add(airport), i -> pathList(1, null, model), i -> {
+      model.addAttribute(Constants.GBF_BIZMSG, "创建失败");
+      model.addAttribute("active", "airport");
+      return "airport_creat";
+    });
   }
 
-  @PostMapping("/api/airport/delete/{id}")
-  public String doDelete(@PathVariable("id") long id, Model model) {
-    return resp(model, () -> srv.deleteById(id), "airport_list");
+  @PostMapping("/api/airport/delete")
+  public String doDelete(@RequestParam long id, Model model) {
+    model.addAttribute("active", "airport");
+    return resp(model, () -> srv.deleteById(id), () -> pathList(1, null, model));
   }
 
   @PostMapping("/api/airport/modify/{id}")
   public String doModify(@PathVariable("id") long id, @RequestParam Map<String, Object> airportMap,
       Model model) {
     Airport airport = getBeanFromBody(Airport.class, airportMap);
-    return resp(model, () -> srv.update(airport), "airport_list", "airport_mod");
+    model.addAttribute("active", "airport");
+    return resp(model, () -> srv.update(airport), i -> pathList(1, null, model), i -> {
+      model.addAttribute(Constants.GBF_BIZMSG, "修改失败");
+      return "airport_mod";
+    });
   }
 }

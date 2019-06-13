@@ -4,6 +4,7 @@ import com.hepangda.keshe.model.Feedback;
 import java.util.List;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 import org.springframework.stereotype.Component;
@@ -15,7 +16,7 @@ public interface FeedbackMapper {
   Feedback selectById(long id);
 
   @Select("SELECT * FROM Feedback LIMIT #{offset},#{count}")
-  List<Feedback> selectLimit(int offset, int count);
+  List<Feedback> selectLimit(@Param("offset") int offset, @Param("count") int count);
 
   @Delete("DELETE FROM Feedback WHERE id=#{id}")
   boolean deleteById(long id);

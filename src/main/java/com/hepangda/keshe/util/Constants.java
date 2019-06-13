@@ -2,7 +2,7 @@ package com.hepangda.keshe.util;
 
 public class Constants {
 
-  public static int BIZ_PAGE_BY = 20;
+  public static int BIZ_PAGE_BY = 3;
 
   public static String BIZF_ISOK = "biz_ok";
 
@@ -18,5 +18,5 @@ public class Constants {
 
   public static String GBF_BIZMSG = "global_biz_message";
 
-  public static String SESSION_USER = "login_user";
+  public static String SESSION_USER = "currentUser";
 }

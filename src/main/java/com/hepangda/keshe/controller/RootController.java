@@ -1,14 +1,11 @@
 package com.hepangda.keshe.controller;
 
-import com.alibaba.fastjson.JSON;
 import com.hepangda.keshe.model.User;
 import com.hepangda.keshe.service.UserService;
 import com.hepangda.keshe.util.Constants;
 import com.hepangda.keshe.util.GenericController;
 import java.util.Map;
-import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpSession;
-import javax.xml.transform.Source;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,12 +16,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 @CrossOrigin
 @Controller
-public class LoginController extends GenericController {
+public class RootController extends GenericController {
 
   @Autowired
   UserService srv;
 
-  @GetMapping
+  @GetMapping("/")
   public String pathRoot(HttpSession session) {
     if (session.getAttribute(Constants.SESSION_USER) == null) {
       return "login";
@@ -32,8 +29,15 @@ public class LoginController extends GenericController {
     return "index";
   }
 
+  @GetMapping("/forbidden")
+  public String pathForbidden() {
+    return "forbidden";
+  }
+
   @GetMapping("/login")
-  public String pathLogin() { return "login";  }
+  public String pathLogin() {
+    return "login";
+  }
 
   @GetMapping("/register")
   public String pathRegister() {
@@ -41,9 +45,18 @@ public class LoginController extends GenericController {
   }
 
   @PostMapping("/api/login")
-  public String login(@RequestParam Map<String, Object> userMap, Model model) {
+  public String login(@RequestParam Map<String, Object> userMap, Model model, HttpSession session) {
     User user = getBeanFromBody(User.class, userMap);
-    return resp(model, () -> srv.login(user), "index", "login");
+    return resp(model, () -> srv.login(user), i -> {
+      session.setAttribute(Constants.SESSION_USER, i);
+      if (i.getType() == 1) {
+        return "gotoadmin";
+      }
+      return "index";
+    }, i -> {
+      model.addAttribute(Constants.GBF_BIZMSG, "用户名密码错误，请重试");
+      return "login";
+    });
   }
 
   @PostMapping("/api/register")

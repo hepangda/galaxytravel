@@ -19,14 +19,16 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
     User loginUser = (User) session.getAttribute(Constants.SESSION_USER);
 
     if (!privilege(loginUser, request.getRequestURI())) {
-      response.sendRedirect("/login");
-      return true;
+      response.sendRedirect("/forbidden");
     } else if (request.getRequestURI().startsWith("/login")) {
-      response.sendRedirect("/index");
-      return true;
+      response.sendRedirect("/");
     }
 
-    return false;
+    if (loginUser != null && request.getRequestURI().startsWith("/login")) {
+      response.sendRedirect("/");
+    }
+
+    return true;
   }
 
   @Override
@@ -44,12 +46,6 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
       return false;
     }
 
-    for (String i : FORBIDDEN_PREFIX) {
-      if (requestUri.startsWith(i)) {
-        return false;
-      }
-    }
-
-    return true;
+    return !(requestUri.startsWith("/admin") && user.getType() == 0);
   }
 }

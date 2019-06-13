@@ -4,6 +4,7 @@ import com.hepangda.keshe.model.Order;
 import java.util.List;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 import org.springframework.stereotype.Component;
@@ -18,7 +19,7 @@ public interface OrderMapper {
   List<Order> selectByUserId(long userId);
 
   @Select("SELECT * FROM Orders LIMIT #{offset},#{count}")
-  List<Order> selectLimit(int offset, int count);
+  List<Order> selectLimit(@Param("offset") int offset, @Param("count") int count);
 
   @Delete("DELETE FROM Orders WHERE id=#{id}")
   boolean deleteById(long id);

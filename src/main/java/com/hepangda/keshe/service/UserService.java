@@ -57,9 +57,21 @@ public class UserService {
     return mapper.selectByUsername(username);
   }
 
-  public List<User> show(int page) {
+  public List<User> show(int page, String keyword) {
     final int offset = Constants.BIZ_PAGE_BY * (page - 1);
-    return mapper.selectLimit(offset, Constants.BIZ_PAGE_BY);
+    if (keyword == null) {
+      return mapper.selectLimit(offset, Constants.BIZ_PAGE_BY);
+    } else {
+      return mapper.selectKeyword(keyword);
+    }
+  }
+
+  public long getPageMax() {
+    long count = mapper.count();
+    if (count % Constants.BIZ_PAGE_BY == 0) {
+      return count / Constants.BIZ_PAGE_BY;
+    }
+    return (count / Constants.BIZ_PAGE_BY) + 1;
   }
 
   public Map<String, String> validate(User user) {

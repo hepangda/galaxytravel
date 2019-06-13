@@ -1,12 +1,38 @@
-修改机场
-
-要修改的机场的信息会放在 biz_modifier 这个attribute里面
-
-最后把所有机场信息用JSON POST到/api/airport/modify/{id} （即便没修改的部分也得POST过来）
-
-{
-Long id;          // 机场ID
-String cityName;  // 城市名  比如：上海
-String portName;  // 机场名  比如：上海虹桥 上海浦东
-Integer type;     // 类型 0=未启用 1=已启用 还是用下拉列表
-}
+<#import "layout/main.ftl" as layout>
+<@layout.content>
+    <#include "layout/sidebar.ftl">
+  <div class="col-md-9">
+    <h1>编辑机场 #${biz_modifier.id?c}</h1>
+    <hr>
+    <form class="form-horizontal" action="/api/airport/modify/${biz_modifier.id?c}" method="POST">
+      <input type="text" class="invisible" name="id" value="${biz_modifier.id?c}">
+      <div class="form-group">
+        <label class="col-sm-2 control-label">机场名</label>
+        <div class="col-sm-10">
+          <input type="text" class="form-control" name="portName" value="${biz_modifier.portName}"
+                 required>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="col-sm-2 control-label">城市名</label>
+        <div class="col-sm-4">
+          <input type="text" class="form-control" name="cityName" value="${biz_modifier.cityName}"
+                 required>
+        </div>
+        <label class="col-sm-2 control-label">状态</label>
+        <div class="col-sm-4">
+          <select name="type" class="form-control">
+            <option value="0" <#if biz_modifier.type==0!>selected</#if>>已启用</option>
+            <option value="1" <#if biz_modifier.type==1!>selected</#if>>未启用</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-10">
+          <button type="submit" class="btn btn-success">保存机场</button>
+          <a class="btn btn-default" href="/admin/airport/list">返回</a>
+        </div>
+      </div>
+    </form>
+  </div>
+</@layout.content>

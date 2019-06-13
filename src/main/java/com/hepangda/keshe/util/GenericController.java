@@ -1,9 +1,7 @@
 package com.hepangda.keshe.util;
 
-import com.fasterxml.jackson.databind.util.BeanUtil;
 import com.hepangda.keshe.exception.BizException;
 import com.hepangda.keshe.exception.FrameworkException;
-import java.lang.reflect.Constructor;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.function.Supplier;
@@ -12,15 +10,16 @@ import org.springframework.ui.Model;
 
 public class GenericController {
 
-  protected <T> String resp(Model model, Supplier<T> supplier, Supplier<String> notNull,
-      Supplier<String> ifNull) {
+  protected <T> String resp(Model model, Supplier<T> supplier, Dealer<T> notNull,
+      Dealer<T> ifNull) {
+    T obj = supplier.get();
     try {
-      if (supplier.get() != null) {
+      if (obj != null) {
         model.addAttribute(Constants.BIZF_ISOK, Constants.BIZF_ISOK_YES);
-        return notNull.get();
+        return notNull.get(obj);
       } else {
         model.addAttribute(Constants.BIZF_ISOK, Constants.BIZF_ISOK_NO);
-        return ifNull.get();
+        return ifNull.get(obj);
       }
     } catch (BizException ex) {
       model.addAttribute(Constants.BIZF_ISOK, Constants.BIZF_ISOK_NO);
@@ -30,7 +29,7 @@ public class GenericController {
       model.addAttribute(Constants.GBF_MESSAGE, ex.getMessage());
     }
 
-    return ifNull.get();
+    return ifNull.get(obj);
   }
 
   protected <T> String resp(Model model, Supplier<T> supplier, String result) {
@@ -49,6 +48,25 @@ public class GenericController {
     }
 
     return result;
+  }
+
+  protected <T> String resp(Model model, Supplier<T> supplier, Supplier<String> result) {
+    try {
+      T obj = supplier.get();
+      if (obj != null) {
+        model.addAttribute(Constants.BIZF_ISOK, Constants.BIZF_ISOK_YES);
+      } else {
+        model.addAttribute(Constants.BIZF_ISOK, Constants.BIZF_ISOK_NO);
+      }
+    } catch (BizException ex) {
+      model.addAttribute(Constants.BIZF_ISOK, Constants.BIZF_ISOK_NO);
+      model.addAttribute(Constants.GBF_BIZMSG, ex.getBizMessage());
+    } catch (Exception ex) {
+      model.addAttribute(Constants.BIZF_ISOK, Constants.BIZF_ISOK_NO);
+      model.addAttribute(Constants.GBF_MESSAGE, ex.getMessage());
+    }
+
+    return result.get();
   }
 
   protected <T> String resp(Model model, Supplier<T> supplier, String success, String failed) {
@@ -72,7 +90,6 @@ public class GenericController {
     try {
       T result = (T) clazz.getMethod("of").invoke(null);
       for (Entry<String, Object> i : beanMap.entrySet()) {
-        System.out.println("Copy: [" + i.getKey() + "] = " + i.getValue());
         BeanUtils.setProperty(result, i.getKey(), i.getValue());
       }
       return result;
@@ -84,5 +101,10 @@ public class GenericController {
 
   protected int dealPage(Integer page) {
     return (page == null || page < 1) ? 1 : page;
+  }
+
+  public interface Dealer<T> {
+
+    String get(T obj);
   }
 }

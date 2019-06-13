@@ -3,6 +3,7 @@ package com.hepangda.keshe.service;
 import com.hepangda.keshe.mapper.AirlineMapper;
 import com.hepangda.keshe.mapper.AirportMapper;
 import com.hepangda.keshe.model.Airline;
+import com.hepangda.keshe.model.Airport;
 import com.hepangda.keshe.util.Constants;
 import com.hepangda.keshe.util.IdUtils;
 import java.util.HashMap;
@@ -37,9 +38,32 @@ public class AirlineService {
     return airlineMapper.selectById(id);
   }
 
-  public List<Airline> show(int page) {
+  public List<Airline> show(int page, String keyword) {
     final int offset = Constants.BIZ_PAGE_BY * (page - 1);
-    return airlineMapper.selectLimit(offset, Constants.BIZ_PAGE_BY);
+    if (keyword == null) {
+      return airlineMapper.selectLimit(offset, Constants.BIZ_PAGE_BY);
+    } else {
+      return airlineMapper.selectKeyword(keyword);
+    }
+  }
+
+  public long getPageMax() {
+    long count = airlineMapper.count();
+    if (count % Constants.BIZ_PAGE_BY == 0) {
+      return count / Constants.BIZ_PAGE_BY;
+    }
+    return (count / Constants.BIZ_PAGE_BY) + 1;
+  }
+
+  public Map<String, String> getPortMap() {
+    Map<String, String> result = new HashMap<>();
+    List<Airport> airports = airportMapper.selectAll();
+
+    for (Airport i : airports) {
+      result.put(i.getId().toString(), i.getPortName());
+    }
+
+    return result;
   }
 
   public Map<String, String> validate(Airline airline) {

@@ -4,6 +4,7 @@ import com.hepangda.keshe.model.User;
 import java.util.List;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 import org.springframework.stereotype.Component;
@@ -18,7 +19,13 @@ public interface UserMapper {
   User selectByUsername(String username);
 
   @Select("SELECT * FROM User LIMIT #{offset},#{count}")
-  List<User> selectLimit(int offset, int count);
+  List<User> selectLimit(@Param("offset") int offset, @Param("count") int count);
+
+  @Select("SELECT * FROM User WHERE username LIKE CONCAT('%',#{keyword},'%')")
+  List<User> selectKeyword(String keyword);
+
+  @Select("SELECT COUNT(*) FROM User")
+  long count();
 
   @Delete("DELETE FROM User WHERE id=#{id}")
   boolean deleteById(long id);
