@@ -18,6 +18,12 @@ public interface FeedbackMapper {
   @Select("SELECT * FROM Feedback LIMIT #{offset},#{count}")
   List<Feedback> selectLimit(@Param("offset") int offset, @Param("count") int count);
 
+  @Select("SELECT * FROM Airport WHERE cityName LIKE CONCAT('%',#{keyword},'%')")
+  List<Feedback> selectKeyword(String keyword);
+
+  @Select("SELECT COUNT(*) FROM Feedback")
+  long count();
+
   @Delete("DELETE FROM Feedback WHERE id=#{id}")
   boolean deleteById(long id);
 

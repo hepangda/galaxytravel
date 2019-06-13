@@ -15,6 +15,9 @@ public interface OrderMapper {
   @Select("SELECT * FROM Orders WHERE id=#{id}")
   Order selectById(long id);
 
+  @Select("SELECT COUNT(*) FROM Orders")
+  long count();
+
   @Select("SELECT * FROM Orders WHERE userId=#{userId}")
   List<Order> selectByUserId(long userId);
 

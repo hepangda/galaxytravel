@@ -62,9 +62,9 @@
               <#if airplane.type==1!><span class="label label-danger">未启用</span></#if>
           </td>
           <td>
-            <a href="/admin/airplane/modify/${airplane.id?c}">编辑飞机</a>
+            <a href="/admin/airplane/modify/${airplane.id?c}">编辑</a>
             <a href="" data-toggle="modal" data-target="#makesureModal"
-               onclick='dvalue("${airplane.id?c}")'>删除飞机</a>
+               onclick='dvalue("${airplane.id?c}")'>删除</a>
           </td>
         </tr>
       </#list>

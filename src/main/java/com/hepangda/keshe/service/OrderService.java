@@ -7,6 +7,7 @@ import com.hepangda.keshe.mapper.UserMapper;
 import com.hepangda.keshe.model.Airplane;
 import com.hepangda.keshe.model.Flight;
 import com.hepangda.keshe.model.Order;
+import com.hepangda.keshe.model.User;
 import com.hepangda.keshe.util.Constants;
 import com.hepangda.keshe.util.IdUtils;
 import java.util.HashMap;
@@ -36,7 +37,16 @@ public class OrderService {
   }
 
   public boolean deleteById(long id) {
-    return orderMapper.deleteById(id);
+    Order order = getById(id);
+    if (order == null) {
+      return false;
+    }
+    if (order.getType() == 1) {
+      order.setType(0);
+    } else {
+      order.setType(1);
+    }
+    return orderMapper.update(order);
   }
 
   public boolean update(Order order) {
@@ -57,6 +67,37 @@ public class OrderService {
     final int offset = Constants.BIZ_PAGE_BY * (page - 1);
     return orderMapper.selectLimit(offset, Constants.BIZ_PAGE_BY);
   }
+
+  public Map<String, String> getUserMap() {
+    Map<String, String> result = new HashMap<>();
+    List<User> users = userMapper.selectAll();
+
+    for (User i : users) {
+      result.put(i.getId().toString(), i.getRealname());
+    }
+
+    return result;
+  }
+
+  public long getPageMax() {
+    long count = orderMapper.count();
+    if (count % Constants.BIZ_PAGE_BY == 0) {
+      return count / Constants.BIZ_PAGE_BY;
+    }
+    return (count / Constants.BIZ_PAGE_BY) + 1;
+  }
+
+  public Map<String, String> getFlightMap() {
+    Map<String, String> result = new HashMap<>();
+    List<Flight> flights = flightMapper.selectAll();
+
+    for (Flight i : flights) {
+      result.put(i.getId().toString(), i.getName());
+    }
+
+    return result;
+  }
+
 
   public Map<String, String> validate(Order order) {
     Map<String, String> result = new HashMap<>();

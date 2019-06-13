@@ -18,13 +18,15 @@
   </style>
 
   <div class="col-md-9">
-      <#if !not_query??>
-        <h1>航线管理</h1>
-        <a class="btn btn-success" href="/admin/airline/create">添加航线</a>
-        <form class="form-inline pull-right" action="/admin/airline/list" method="get">
+      <#if not_query??>
+        <h1>航班管理</h1>
+        <a class="btn btn-success" href="/admin/flight/create">添加航班</a>
+        <form class="form-inline pull-right" action="/admin/flight/list" method="get">
           <div class="form-group">
             <div class="input-group">
-              <input type="text" class="form-control" name="keyword" placeholder="航线名"/>
+              <input type="text" class="input-small" name="from" placeholder="起飞地"/>
+              <input type="text" class="input-small" name="to" placeholder="降落地"/>
+              <input type="date" class="input-small" name="time" placeholder="出行时间"/>
               <span class="input-group-addon">
             <button type="submit" class="searchbutton">
               <i class="glyphicon glyphicon-search"><span>搜索</span></i>
@@ -34,47 +36,46 @@
           </div>
         </form>
       <#else>
-        <h1>航线搜索结果</h1>
+        <h1>航班搜索结果</h1>
       </#if>
 
     <table class="table">
       <thead>
       <tr>
         <th style="width: 10%; text-overflow: ellipsis;">ID</th>
-        <th style="width: 25%;">航线名</th>
-        <th>起飞机场</th>
-        <th>降落机场</th>
-        <th>类型</th>
+        <th>航班名</th>
+        <th>航线名</th>
+        <th>飞机名</th>
+        <th>时间</th>
+        <th>头等舱价格</th>
+        <th>经济舱价格</th>
         <th>操作</th>
       </tr>
       </thead>
       <tbody>
-      <#list biz_list as airline>
+      <#list biz_list as flight>
         <tr>
-          <td class="text-right">${airline.id?c}</td>
-          <td>${airline.name}</td>
-          <td>${biz_airport_map[airline.sourcePortId?c]}</td>
-          <td>${biz_airport_map[airline.destPortId?c]}</td>
+          <td class="text-right">${flight.id?c}</td>
+          <td>${flight.name}</td>
+          <td>${biz_airline_map[flight.airlineId?c]}</td>
+          <td>${biz_airplane_map[flight.airplaneId?c]}</td>
+          <td>${flight.scheTime}</td>
+          <td>${flight.firstClassPrice}</td>
+          <td>${flight.secondClassPrice}</td>
           <td>
-              <#if airline.type==0!><span class="label label-danger">未启用</span></#if>
-              <#if airline.type==1!><span class="label label-warning">规划中</span></#if>
-              <#if airline.type==2!><span class="label label-success">已启用</span></#if>
-          </td>
-
-          <td>
-            <a href="/admin/airline/modify/${airline.id?c}">编辑</a>
+            <a href="/admin/flight/modify/${flight.id?c}">编辑</a>
             <a href="" data-toggle="modal" data-target="#makesureModal"
-               onclick='dvalue("${airline.id?c}")'>删除</a>
+               onclick='dvalue("${flight.id?c}")'>删除</a>
           </td>
         </tr>
       </#list>
       </tbody>
     </table>
 
-      <#if !not_query??>
+      <#if not_query??>
         <nav class="pull-right">
             <#if RequestParameters['page']?? && RequestParameters['page']?eval gt 1>
-              <a href="/admin/airline/list?page=${RequestParameters['page']?eval - 1}"><span>&laquo;</span>上一页</a>
+              <a href="/admin/flight/list?page=${RequestParameters['page']?eval - 1}"><span>&laquo;</span>上一页</a>
             </#if>
 
           第<#if RequestParameters['page']??>${RequestParameters['page']}<#else>1</#if>页，共${page_max}
@@ -82,17 +83,17 @@
 
             <#if RequestParameters['page']??>
                 <#if RequestParameters['page']?eval lt page_max>
-                  <a href="/admin/airline/list?page=${RequestParameters['page']?eval + 1}">下一页<span>&raquo;</span></a>
+                  <a href="/admin/flight/list?page=${RequestParameters['page']?eval + 1}">下一页<span>&raquo;</span></a>
                 </#if>
             <#else>
                 <#if 1 lt page_max>
-                  <a href="/admin/airline/list?page=2">下一页<span>&raquo;</span></a>
+                  <a href="/admin/flight/list?page=2">下一页<span>&raquo;</span></a>
                 </#if>
             </#if>
         </nav>
       <#else>
         <nav class="pull-right">
-          <a href="/admin/airline/list"><span>&laquo;</span>返回</a>
+          <a href="/admin/flight/list"><span>&laquo;</span>返回</a>
         </nav>
       </#if>
   </div>

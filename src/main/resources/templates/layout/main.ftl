@@ -33,10 +33,6 @@
                             <span>${currentUser.realname}</span> <span class="caret"></span>
                         </button>
                         <ul class="dropdown-menu">
-                            <li><a href="/admin/movie">影片管理</a></li>
-                            <li><a href="/admin/theater">演出厅管理</a></li>
-                            <li><a href="/admin/user">用户管理</a></li>
-                            <li role="separator" class="divider"></li>
                             <li><a href="/logout">退出</a></li>
                         </ul>
                     </div>

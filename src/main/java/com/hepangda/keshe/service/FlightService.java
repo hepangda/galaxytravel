@@ -33,6 +33,9 @@ public class FlightService {
   private AirplaneMapper airplaneMapper;
 
   public boolean add(Flight flight) {
+    if (flight.getScheTime() == null) {
+      return false;
+    }
     flight.setId(IdUtils.nextId());
     return flightMapper.insert(flight);
   }
@@ -49,13 +52,45 @@ public class FlightService {
     return flightMapper.selectById(id);
   }
 
-  public List<Flight> show(int page) {
+  public List<Flight> show(int page, String from, String to, String time) {
     final int offset = Constants.BIZ_PAGE_BY * (page - 1);
-    return flightMapper.selectLimit(offset, Constants.BIZ_PAGE_BY);
+    if (AllNull(from, to, time)) {
+      return flightMapper.selectLimit(offset, Constants.BIZ_PAGE_BY);
+    } else {
+      if (from == null) {
+        from = "";
+      }
+      if (to == null) {
+        to = "";
+      }
+
+      return search(from, to, time);
+    }
   }
 
-  public List<Flight> search(String fromPort, String toPort, long lowTime, long highTime) {
-    List<Flight> flightList = flightMapper.selectTime(lowTime, highTime);
+  public Map<String, String> getLineMap() {
+    Map<String, String> result = new HashMap<>();
+    List<Airline> airlines = airlineMapper.selectAll();
+
+    for (Airline i : airlines) {
+      result.put(i.getId().toString(), i.getName());
+    }
+
+    return result;
+  }
+
+  public Map<String, String> getPlaneMap() {
+    Map<String, String> result = new HashMap<>();
+    List<Airplane> airplanes = airplaneMapper.selectAll();
+
+    for (Airplane i : airplanes) {
+      result.put(i.getId().toString(), i.getName());
+    }
+
+    return result;
+  }
+
+  private List<Flight> search(String fromPort, String toPort, String time) {
     List<Airport> airportList = airportMapper.selectAll();
     List<Airline> airlineList = airlineMapper.selectAll();
 
@@ -75,9 +110,34 @@ public class FlightService {
         .map(Airline::getId)
         .collect(Collectors.toList());
 
+    List<Flight> flightList;
+    if (time == null || time.isEmpty()) {
+      flightList = flightMapper.selectAll();
+    } else {
+      flightList = flightMapper.selectTime(time + " 00:00:00", time + " 23:59:59");
+    }
     return flightList.stream()
         .filter(i -> airlineIdList.contains(i.getAirlineId()))
         .collect(Collectors.toList());
+  }
+
+  public long getPageMax() {
+    long count = flightMapper.count();
+    if (count % Constants.BIZ_PAGE_BY == 0) {
+      return count / Constants.BIZ_PAGE_BY;
+    }
+    return (count / Constants.BIZ_PAGE_BY) + 1;
+  }
+
+  public boolean AllNull(String... obj) {
+    int cnt = 0;
+    for (String i : obj) {
+      if (i == null || i.trim().isEmpty()) {
+        cnt++;
+      }
+    }
+
+    return cnt == obj.length;
   }
 
   public Map<String, String> validate(Flight flight) {

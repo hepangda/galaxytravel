@@ -5,7 +5,7 @@ import org.springframework.boot.SpringBootConfiguration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
-//@SpringBootConfiguration
+@SpringBootConfiguration
 public class LoginInterceptorAdapter extends WebMvcConfigurerAdapter {
 
   @Autowired

@@ -42,6 +42,14 @@ public class FeedbackService {
     return feedbackMapper.selectLimit(offset, Constants.BIZ_PAGE_BY);
   }
 
+  public long getPageMax() {
+    long count = feedbackMapper.count();
+    if (count % Constants.BIZ_PAGE_BY == 0) {
+      return count / Constants.BIZ_PAGE_BY;
+    }
+    return (count / Constants.BIZ_PAGE_BY) + 1;
+  }
+
   public Map<String, String> validate(Feedback feedback) {
     Map<String, String> result = new HashMap<>();
 

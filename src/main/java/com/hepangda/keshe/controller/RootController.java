@@ -23,10 +23,15 @@ public class RootController extends GenericController {
 
   @GetMapping("/")
   public String pathRoot(HttpSession session) {
-    if (session.getAttribute(Constants.SESSION_USER) == null) {
+    User user = (User) session.getAttribute(Constants.SESSION_USER);
+    if (user == null) {
       return "login";
     }
-    return "index";
+    if (user.getType() == 0) {
+      return "index";
+    } else {
+      return "gotoadmin";
+    }
   }
 
   @GetMapping("/forbidden")
@@ -42,6 +47,12 @@ public class RootController extends GenericController {
   @GetMapping("/register")
   public String pathRegister() {
     return "register";
+  }
+
+  @GetMapping("/logout")
+  public String pathLogout(HttpSession session) {
+    session.invalidate();
+    return "/";
   }
 
   @PostMapping("/api/login")

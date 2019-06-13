@@ -15,7 +15,7 @@ public class Flight {
 
   private String name;
 
-  private Long scheTime;
+  private String scheTime;
 
   private Long firstClassPrice;
 

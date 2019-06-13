@@ -23,19 +23,23 @@ public class FeedbackController extends GenericController {
 
   @GetMapping("/user/feedback/create/{orderId}")
   public String pathCreate(@PathVariable("orderId") long orderId, Model model) {
+    model.addAttribute("active", "feedback");
     model.addAttribute(Constants.BIZF_MODIFIER, orderId);
     return "feedback_creat";
   }
 
   @GetMapping("/user/feedback/modify/{id}")
   public String pathModify(@PathVariable("id") long id, Model model) {
+    model.addAttribute("active", "feedback");
     model.addAttribute(Constants.BIZF_MODIFIER, srv.getById(id));
     return "feedback_mod";
   }
 
   @GetMapping("/admin/feedback/list")
-  public String pathList(@RequestParam Integer page, Model model) {
+  public String pathList(@RequestParam(required = false) Integer page, Model model) {
     int ipage = dealPage(page);
+    model.addAttribute("active", "feedback");
+    model.addAttribute("page_max", srv.getPageMax());
     model.addAttribute(Constants.BIZF_LIST, srv.show(ipage));
     return "feedback_list";
   }
@@ -46,18 +50,22 @@ public class FeedbackController extends GenericController {
     // TODO: add success router
 
     Feedback feedback = getBeanFromBody(Feedback.class, feedbackMap);
+    model.addAttribute("active", "feedback");
     return resp(model, () -> srv.add(feedback), "", "feedback_creat");
   }
 
-  @PostMapping("/api/feedback/delete/{id}")
-  public String doDelete(@PathVariable("id") long id, Model model) {
-    return resp(model, () -> srv.deleteById(id), "feedback_list");
+  @PostMapping("/api/feedback/delete")
+  public String doDelete(@RequestParam long id, Model model) {
+    model.addAttribute("active", "feedback");
+    return resp(model, () -> srv.deleteById(id), () -> pathList(1, model));
   }
 
   @PostMapping("/api/feedback/modify/{id}")
   public String doModify(@PathVariable("id") long id, @RequestParam Map<String, Object> feedbackMap,
       Model model) {
     Feedback feedback = getBeanFromBody(Feedback.class, feedbackMap);
+    model.addAttribute("active", "feedback");
+
     return resp(model, () -> srv.update(feedback), "feedback_list", "feedback_mod");
   }
 }

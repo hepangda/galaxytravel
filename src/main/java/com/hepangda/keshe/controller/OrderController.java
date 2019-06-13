@@ -39,48 +39,48 @@ public class OrderController extends GenericController {
   @GetMapping("/admin/order/create/{id}")
   public String pathCreate(@PathVariable("id") long id, Model model) {
     Flight flight = fsrv.getById(id);
+    model.addAttribute("active", "order");
+
     model.addAttribute("biz_flight_msg", flight);
     model.addAttribute("biz_airline_msg", asrv.getById(flight.getAirlineId()));
     model.addAttribute("biz_airplane_msg", psrv.getById(flight.getAirplaneId()));
     return "order_creat";
   }
 
-  @GetMapping("/admin/order/modify/{id}")
-  public String pathModify(@PathVariable("id") long id, Model model) {
-    model.addAttribute(Constants.BIZF_MODIFIER, srv.getById(id));
-    return "order_mod";
-  }
-
   @GetMapping("/admin/order/list")
-  public String pathAdminList(@RequestParam Integer page, Model model) {
+  public String pathAdminList(@RequestParam(required = false) Integer page, Model model) {
     int ipage = dealPage(page);
     model.addAttribute(Constants.BIZF_LIST, srv.show(ipage));
+    model.addAttribute("active", "order");
+    model.addAttribute("biz_user_map", srv.getUserMap());
+    model.addAttribute("biz_flight_map", srv.getFlightMap());
+    model.addAttribute("page_max", srv.getPageMax());
     return "order_list_admin";
   }
 
   @GetMapping("/user/order/list")
-  public String pathUserList(@RequestParam Integer page, HttpSession session, Model model) {
+  public String pathUserList(@RequestParam(required = false) Integer page, HttpSession session, Model model) {
     User user = (User) session.getAttribute(Constants.SESSION_USER);
     int ipage = dealPage(page);
     model.addAttribute(Constants.BIZF_LIST, srv.showUser(user.getId(), ipage));
+    model.addAttribute("active", "order");
+    model.addAttribute("biz_user_map", srv.getUserMap());
+    model.addAttribute("biz_flight_map", srv.getFlightMap());
+    model.addAttribute("page_max", srv.getPageMax());
+
     return "order_list_user";
   }
 
   @PostMapping("/api/order/create")
   public String doCreate(@RequestParam Map<String, Object> orderMap, Model model) {
     Order order = getBeanFromBody(Order.class, orderMap);
+    model.addAttribute("active", "order");
+
     return resp(model, () -> srv.add(order), "order_list", "order_creat");
   }
 
-  @PostMapping("/api/order/delete/{id}")
-  public String doDelete(@PathVariable("id") long id, Model model) {
-    return resp(model, () -> srv.deleteById(id), "order_list");
-  }
-
-  @PostMapping("/api/order/modify/{id}")
-  public String doModify(@PathVariable("id") long id, @RequestParam Map<String, Object> orderMap,
-      Model model) {
-    Order order = getBeanFromBody(Order.class, orderMap);
-    return resp(model, () -> srv.update(order), "order_list", "order_mod");
+  @PostMapping("/api/order/delete")
+  public String doDelete(@RequestParam long id, Model model) {
+    return resp(model, () -> srv.deleteById(id), () -> pathAdminList(1, model));
   }
 }

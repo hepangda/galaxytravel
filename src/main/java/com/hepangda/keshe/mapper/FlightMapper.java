@@ -15,11 +15,17 @@ public interface FlightMapper {
   @Select("SELECT * FROM Flight WHERE id=#{id}")
   Flight selectById(long id);
 
+  @Select("SELECT * FROM Flight")
+  List<Flight> selectAll();
+
+  @Select("SELECT COUNT(*) FROM Flight")
+  long count();
+
   @Select("SELECT * FROM Flight LIMIT #{offset},#{count}")
   List<Flight> selectLimit(@Param("offset") int offset, @Param("count") int count);
 
   @Select("SELECT * FROM Flight WHERE scheTime >= #{low} AND scheTime <= #{high}")
-  List<Flight> selectTime(long low, long high);
+  List<Flight> selectTime(@Param("low") String low, @Param("high") String high);
 
   @Delete("DELETE FROM Flight WHERE id=#{id}")
   boolean deleteById(long id);
@@ -30,6 +36,6 @@ public interface FlightMapper {
   boolean update(Flight flight);
 
   @Insert("INSERT INTO Flight VALUES(#{id},#{airlineId},#{airplaneId},#{name},#{scheTime},"
-      + "#{firstClassPrice},#{secondClassPrice)")
+      + "#{firstClassPrice},#{secondClassPrice})")
   boolean insert(Flight flight);
 }

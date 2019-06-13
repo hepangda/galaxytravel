@@ -57,9 +57,9 @@
               <#if airport.type==1!><span class="label label-danger">未启用</span></#if>
           </td>
           <td>
-            <a href="/admin/airport/modify/${airport.id?c}">编辑机场</a>
+            <a href="/admin/airport/modify/${airport.id?c}">编辑</a>
             <a href="" data-toggle="modal" data-target="#makesureModal"
-               onclick='dvalue("${airport.id?c}")'>删除机场</a>
+               onclick='dvalue("${airport.id?c}")'>删除</a>
           </td>
         </tr>
       </#list>

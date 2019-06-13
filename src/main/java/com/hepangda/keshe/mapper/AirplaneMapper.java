@@ -15,6 +15,9 @@ public interface AirplaneMapper {
   @Select("SELECT * FROM Airplane WHERE id=#{id}")
   Airplane selectById(long id);
 
+  @Select("SELECT * FROM Airplane")
+  List<Airplane> selectAll();
+
   @Select("SELECT * FROM Airplane LIMIT #{offset},#{count}")
   List<Airplane> selectLimit(@Param("offset") int offset, @Param("count") int count);
 
