@@ -1,10 +1,25 @@
-创建反馈
+<#import "layout/main.ftl" as layout>
+<@layout.content>
+    <#include "layout/sidebar_usr.ftl">
+  <div class="col-md-9">
+    <h1>创建反馈</h1>
+    <hr>
+    <form class="form-horizontal" action="/api/feedback/create" method="POST">
+      <input type="text" name="orderId" value="${biz_modifier}" hidden>
 
-这个功能的入口在订单那里，可以从 biz_orderId 这个attribute里拿到订单ID
+      <div class="form-group">
+        <label class="col-sm-2 control-label">信息</label>
+        <div class="col-sm-10">
+          <textarea name="message" style="resize: none" rows="5" class="form-control"></textarea>
+        </div>
+      </div>
 
-用JSON POST到/api/feedback/create，
-
-{
-Long orderId;   // 订单ID
-String message; // 反馈信息
-}
+      <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-10">
+          <button type="submit" class="btn btn-success">反馈</button>
+          <a class="btn btn-default" href="/user/order/list">返回</a>
+        </div>
+      </div>
+    </form>
+  </div>
+</@layout.content>

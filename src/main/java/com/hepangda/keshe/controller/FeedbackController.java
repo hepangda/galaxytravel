@@ -28,13 +28,6 @@ public class FeedbackController extends GenericController {
     return "feedback_creat";
   }
 
-  @GetMapping("/user/feedback/modify/{id}")
-  public String pathModify(@PathVariable("id") long id, Model model) {
-    model.addAttribute("active", "feedback");
-    model.addAttribute(Constants.BIZF_MODIFIER, srv.getById(id));
-    return "feedback_mod";
-  }
-
   @GetMapping("/admin/feedback/list")
   public String pathList(@RequestParam(required = false) Integer page, Model model) {
     int ipage = dealPage(page);
@@ -47,25 +40,15 @@ public class FeedbackController extends GenericController {
 
   @PostMapping("/api/feedback/create")
   public String doCreate(@RequestParam Map<String, Object> feedbackMap, Model model) {
-    // TODO: add success router
-
     Feedback feedback = getBeanFromBody(Feedback.class, feedbackMap);
     model.addAttribute("active", "feedback");
-    return resp(model, () -> srv.add(feedback), "", "feedback_creat");
+    return resp(model, () -> srv.add(feedback), i -> "gotoorder",
+        i -> pathCreate(feedback.getOrderId(), model));
   }
 
   @PostMapping("/api/feedback/delete")
   public String doDelete(@RequestParam long id, Model model) {
     model.addAttribute("active", "feedback");
     return resp(model, () -> srv.deleteById(id), () -> pathList(1, model));
-  }
-
-  @PostMapping("/api/feedback/modify/{id}")
-  public String doModify(@PathVariable("id") long id, @RequestParam Map<String, Object> feedbackMap,
-      Model model) {
-    Feedback feedback = getBeanFromBody(Feedback.class, feedbackMap);
-    model.addAttribute("active", "feedback");
-
-    return resp(model, () -> srv.update(feedback), "feedback_list", "feedback_mod");
   }
 }

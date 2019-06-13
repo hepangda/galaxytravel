@@ -91,6 +91,9 @@ public class FlightService {
   }
 
   private List<Flight> search(String fromPort, String toPort, String time) {
+    System.err.println(fromPort);
+    System.err.println(toPort);
+    System.err.println(time);
     List<Airport> airportList = airportMapper.selectAll();
     List<Airline> airlineList = airlineMapper.selectAll();
 

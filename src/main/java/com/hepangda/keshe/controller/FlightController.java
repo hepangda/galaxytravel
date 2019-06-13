@@ -4,6 +4,7 @@ import com.hepangda.keshe.model.Flight;
 import com.hepangda.keshe.service.FlightService;
 import com.hepangda.keshe.util.Constants;
 import com.hepangda.keshe.util.GenericController;
+import java.util.ArrayList;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -59,22 +60,18 @@ public class FlightController extends GenericController {
 
 
   @GetMapping("/user/flight/list")
-  public String pathUserList(@RequestParam Integer page,
+  public String pathUserList(@RequestParam(required = false) Integer page,
       @RequestParam(required = false) String from,
       @RequestParam(required = false) String to,
       @RequestParam(required = false) String time,
       Model model) {
-//    int ipage = dealPage(page);
-//    model.addAttribute("biz_airplane_map", srv.getPlaneMap());
-//    model.addAttribute("biz_airline_map", srv.getLineMap());
-//    model.addAttribute(Constants.BIZF_LIST, srv.show(ipage, from, to, time));
-//    if ((from != null && to != null && time != null) &&
-//        (!from.isEmpty() && !to.isEmpty() && !time.isEmpty())) {
-//      model.addAttribute("not_query", "yes");
-//    }
-//
-//    return "flight_list_admin";
-    return "";
+    int ipage = dealPage(page);
+    model.addAttribute("active", "flight");
+    model.addAttribute("biz_airplane_map", srv.getPlaneMap());
+    model.addAttribute("biz_airline_map", srv.getLineMap());
+    model.addAttribute(Constants.BIZF_LIST, srv.show(ipage, from, to, time));
+
+    return "flight_list_user";
   }
 
   @PostMapping("/api/flight/create")

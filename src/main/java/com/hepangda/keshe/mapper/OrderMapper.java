@@ -18,8 +18,12 @@ public interface OrderMapper {
   @Select("SELECT COUNT(*) FROM Orders")
   long count();
 
-  @Select("SELECT * FROM Orders WHERE userId=#{userId}")
-  List<Order> selectByUserId(long userId);
+  @Select("SELECT COUNT(*) FROM Orders WHERE userId=#{id}")
+  long countUser(long id);
+
+  @Select("SELECT * FROM Orders WHERE userId=#{userId} LIMIT #{offset},#{count}")
+  List<Order> selectByUserId(@Param("userId") long userId, @Param("offset") int offset,
+      @Param("count") int count);
 
   @Select("SELECT * FROM Orders LIMIT #{offset},#{count}")
   List<Order> selectLimit(@Param("offset") int offset, @Param("count") int count);

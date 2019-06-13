@@ -37,8 +37,8 @@ public class OrderController extends GenericController {
   AirplaneService psrv;
 
   @GetMapping("/admin/order/create/{id}")
-  public String pathCreate(@PathVariable("id") long id, Model model) {
-    Flight flight = fsrv.getById(id);
+  public String pathCreate(@PathVariable("id") long flightId, Model model) {
+    Flight flight = fsrv.getById(flightId);
     model.addAttribute("active", "order");
 
     model.addAttribute("biz_flight_msg", flight);
@@ -66,7 +66,7 @@ public class OrderController extends GenericController {
     model.addAttribute("active", "order");
     model.addAttribute("biz_user_map", srv.getUserMap());
     model.addAttribute("biz_flight_map", srv.getFlightMap());
-    model.addAttribute("page_max", srv.getPageMax());
+    model.addAttribute("page_max", srv.getPageMax(user.getId()));
 
     return "order_list_user";
   }

@@ -58,9 +58,9 @@ public class OrderService {
   }
 
   public List<Order> showUser(long userId, int page) {
-    List<Order> result = orderMapper.selectByUserId(userId);
-    int skipCount = (page - 1) * Constants.BIZ_PAGE_BY;
-    return result.subList(skipCount, skipCount + Constants.BIZ_PAGE_BY - 1);
+    final int offset = Constants.BIZ_PAGE_BY * (page - 1);
+
+    return orderMapper.selectByUserId(userId, offset, Constants.BIZ_PAGE_BY);
   }
 
   public List<Order> show(int page) {
@@ -81,6 +81,14 @@ public class OrderService {
 
   public long getPageMax() {
     long count = orderMapper.count();
+    if (count % Constants.BIZ_PAGE_BY == 0) {
+      return count / Constants.BIZ_PAGE_BY;
+    }
+    return (count / Constants.BIZ_PAGE_BY) + 1;
+  }
+
+  public long getPageMax(long userId) {
+    long count = orderMapper.countUser(userId);
     if (count % Constants.BIZ_PAGE_BY == 0) {
       return count / Constants.BIZ_PAGE_BY;
     }

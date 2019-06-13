@@ -44,8 +44,8 @@
       <tr>
         <th style="width: 10%; text-overflow: ellipsis;">ID</th>
         <th>航班名</th>
-        <th>航线名</th>
         <th>飞机名</th>
+        <th>航线名</th>
         <th>时间</th>
         <th>头等舱价格</th>
         <th>经济舱价格</th>

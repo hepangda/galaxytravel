@@ -30,6 +30,6 @@ public interface FeedbackMapper {
   @Update("UPDATE Feedback SET orderId=#{orderId},message=#{message} WHERE id=#{id}")
   boolean update(Feedback feedback);
 
-  @Insert("INSERT INTO Feedback VALUES(#{id},#{orderId},#{message}")
+  @Insert("INSERT INTO Feedback VALUES(#{id},#{orderId},#{message})")
   boolean insert(Feedback feedback);
 }
